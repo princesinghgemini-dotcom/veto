@@ -23,7 +23,6 @@ services:
   - type: web
     name: cattle-admin
     env: static
-    region: ohio
     plan: free
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
@@ -32,7 +31,7 @@ services:
         fromService:
           type: web
           name: cattle-backend
-          property: url
+          property: host
 
 databases:
   - name: cattle-db

@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+let apiUrl = import.meta.env.VITE_API_URL || '/api/admin';
+if (apiUrl !== '/api/admin' && !apiUrl.startsWith('http')) {
+    apiUrl = `https://${apiUrl}`;
+}
+
 const apiClient = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || '/api/admin',
+    baseURL: apiUrl,
     headers: {
         'Content-Type': 'application/json',
     },
