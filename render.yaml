@@ -1,0 +1,40 @@
+services:
+  # Backend
+  - type: web
+    name: cattle-backend
+    env: python
+    region: ohio
+    plan: free
+    buildCommand: pip install -r requirements.txt && alembic upgrade head
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: cattle-db
+          property: connectionString
+      - key: ENV
+        value: production
+      - key: GEMINI_API_KEY
+        generateValue: true
+
+  # Admin Panel
+  - type: web
+    name: cattle-admin
+    env: static
+    region: ohio
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: cattle-backend
+          property: url
+
+databases:
+  - name: cattle-db
+    region: ohio
+    plan: free
