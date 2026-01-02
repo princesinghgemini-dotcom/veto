@@ -31,8 +31,6 @@ services:
   - type: web
     name: cattle-admin
     env: static
-    # region: ohio  <-- REMOVED: Static sites are global CDN and cannot have a region
-    plan: starter # <-- UPDATED: 'free' is not a valid plan name for static sites in blueprints (starter is the free tier for static)
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     envVars:
