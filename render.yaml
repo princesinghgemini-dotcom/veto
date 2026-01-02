@@ -31,10 +31,10 @@ services:
   - type: web
     name: cattle-admin
     env: static
-    # region: ohio  <-- Removed: Static sites are global on Render
-    plan: starter # <-- Fixed: 'free' is not a valid identifier for static blueprints
+    region: ohio
+    plan: free
     buildCommand: npm install && npm run build
-    staticPublishPath: ./dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         value: https://cattle-backend.onrender.com/api/admin
