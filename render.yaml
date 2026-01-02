@@ -8,7 +8,9 @@ services:
     region: ohio
     plan: free
     buildCommand: pip install -r requirements.txt
-    startCommand: "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    startCommand: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
@@ -19,7 +21,7 @@ services:
       - key: ENV
         value: production
       - key: DEBUG
-        value: "false"
+        value: false
       - key: GEMINI_API_KEY
         sync: false
 
@@ -29,15 +31,13 @@ services:
   - type: web
     name: cattle-admin
     env: static
-    plan: starter
+    # region: ohio  <-- Removed: Static sites are global on Render
+    plan: starter # <-- Fixed: 'free' is not a valid identifier for static blueprints
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: cattle-backend
-          property: host
+        value: https://cattle-backend.onrender.com/api/admin
 
 # =========================
 # PostgreSQL Database
